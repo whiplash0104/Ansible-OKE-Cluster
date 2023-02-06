@@ -1,4 +1,4 @@
-- name: Crea VCN
+- name: Crea Cluster OKE
   hosts: localhost
   connection: local
 
@@ -10,11 +10,11 @@
         - name: Lista Todas las VCNs
           oracle.oci.oci_network_vcn_facts:
              compartment_id: "{{ compartment_ocid }}"
-             display_name: "{{ display_name }}"
+             display_name: "{{ display_name_vcn }}"
           register: resultado
 
         - set_fact:
-             vcns_id: "{{ resultado.vcns[0].id }}"
+            vcns_id: "{{ resultado.vcns[0].id }}"
 
         - name: Valida Ultima Version de Kubernetes
           oracle.oci.oci_container_engine_cluster_options_facts:
