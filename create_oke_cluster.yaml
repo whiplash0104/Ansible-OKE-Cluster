@@ -1,0 +1,63 @@
+- name: Crea VCN
+  hosts: localhost
+  connection: local
+
+  vars_files: vault.yaml
+
+
+  tasks:
+    - block:
+        - name: Lista Todas las VCNs
+          oracle.oci.oci_network_vcn_facts:
+             compartment_id: "{{ compartment_ocid }}"
+             display_name: "{{ display_name }}"
+          register: resultado
+
+        - set_fact:
+             vcns_id: "{{ resultado.vcns[0].id }}"
+
+        - name: Valida Ultima Version de Kubernetes
+          oracle.oci.oci_container_engine_cluster_options_facts:
+            cluster_option_id: all
+          register: resultado
+
+        - set_fact:
+            k8s_version: "{{ resultado.cluster_options.kubernetes_versions[1] }}"
+
+        - name: Lista LB Subnet
+          oracle.oci.oci_network_subnet_facts:
+            compartment_id: "{{ compartment_ocid }}"
+            display_name: "{{ lb_subnet1_name }}" 
+          register: resultado
+
+        - set_fact:
+          lb_subnet1_id: "{{ resultado.internet_gateways[0].id }}"
+
+        - name: Lista LB Subnet
+          oracle.oci.oci_network_subnet_facts:
+            compartment_id: "{{ compartment_ocid }}"
+            display_name: "{{ lb_subnet2_name }}"
+          register: resultado
+
+        - set_fact:
+          lb_subnet2_id: "{{ resultado.internet_gateways[0].id }}"
+
+
+        - name: Crea Cluster OKE 
+          oracle.oci.oci_container_engine_cluster:
+            compartment_id: "{{ compartment_ocid }}"
+            name: "{{ cluster_name }}"
+            vcn_id: "{{ vcns_id }}"
+            kubernetes_version: "{{ k8s_version }}"
+            options:
+              service_lb_subnet_ids:
+                - "{{ lb_subnet1_id }}"
+                - "{{ lb_subnet2_id }}"
+          register: resultado
+
+        - set_fact:
+            cluster_id: "{{resultado.cluster.id }}"
+
+      rescue:
+      - fail:
+        msg: "ERROR, No se logro Crear Cluster OKE"
