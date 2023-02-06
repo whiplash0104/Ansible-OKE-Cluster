@@ -22,7 +22,7 @@
           register: resultado
 
         - set_fact:
-            k8s_version: "{{ resultado.cluster_options.kubernetes_versions[1] }}"
+            k8s_version: "{{ resultado.cluster_options.kubernetes_versions[3] }}"
 
         - name: Lista LB Subnet
           oracle.oci.oci_network_subnet_facts:
