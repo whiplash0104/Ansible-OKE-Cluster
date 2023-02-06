@@ -40,7 +40,7 @@
           register: resultado
 
         - set_fact:
-            lb_subnet2_id: "{{ resultado.subnetst[0].id }}"
+            lb_subnet2_id: "{{ resultado.subnets[0].id }}"
 
 
         - name: Crea Cluster OKE 
