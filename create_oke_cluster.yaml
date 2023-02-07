@@ -36,7 +36,7 @@
         - name: Lista LB Subnet
           oracle.oci.oci_network_subnet_facts:
             compartment_id: "{{ compartment_ocid }}"
-            display_name: "{{ lb_slb_subnet1_idlb_subnet1_idlb_subnet1_idlb_subnet1_idlb_subnet1_idubnet2_name }}"
+            display_name: "{{ subnet1_name }}"
           register: resultado
 
         - set_fact:
