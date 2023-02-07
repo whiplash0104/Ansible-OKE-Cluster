@@ -36,7 +36,7 @@
         - name: Lista LB Subnet
           oracle.oci.oci_network_subnet_facts:
             compartment_id: "{{ compartment_ocid }}"
-            display_name: "{{ lb_subnet2_name }}"
+            display_name: "{{ lb_slb_subnet1_idlb_subnet1_idlb_subnet1_idlb_subnet1_idlb_subnet1_idubnet2_name }}"
           register: resultado
 
         - set_fact:
@@ -77,6 +77,15 @@
           when: 
             - item.source_name.find("7.6") == -1
             - item.source_name.find("aarch64") == -1
+        
+        - name: Lista Subnets
+          oracle.oci.oci_network_subnet_facts:
+            compartment_id: "{{ compartment_ocid }}"
+            display_name: "{{ subnet1_name }}"
+          register: resultado
+
+        - set_fact:
+           ad1_subnet_id: "{{ resultado.subnets[0].id }}"
 
         - name: Create a node pool
           oracle.oci.oci_container_engine_node_pool:
@@ -86,7 +95,15 @@
             kubernetes_version: "{{ k8s_version }}"
             node_source_details: "{{ node_pool_source_details }}"
             node_shape: "{{ node_shape }}"
-            node_config_details: "{{ node_pool_config_details }}"
+            node_config_details:
+              size: '1'
+              placement_configs:
+                - availability_domain: "{{ ad1 }}"
+                  subnet_id: "{{ ad1_subnet_id }}"
+                - availability_domain: "{{ ad2 }}"
+                  subnet_id: "{{ ad2_subnet_id }}"
+                - availability_domain: "{{ ad3 }}"
+                  subnet_id: "{{ ad3_subnet_id }}"
           register: resultresultado
 
         - set_fact:
