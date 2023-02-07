@@ -106,7 +106,7 @@
            ad3_subnet_id: "{{ resultado.subnets[0].id }}"
 
 
-        - name: Create a node pool
+        - name: Crea Node Pool
           oracle.oci.oci_container_engine_node_pool:
             cluster_id: "{{ cluster_id }}"
             compartment_id: "{{ compartment_ocid }}"
@@ -123,7 +123,7 @@
                   subnet_id: "{{ ad2_subnet_id }}"
                 - availability_domain: "{{ ad3 }}"
                   subnet_id: "{{ ad3_subnet_id }}"
-          register: resultresultado
+          register: resultado
 
         - set_fact:
             node_pool_id: "{{ resultado.node_pool.id }}"
