@@ -87,6 +87,25 @@
         - set_fact:
            ad1_subnet_id: "{{ resultado.subnets[0].id }}"
 
+        - name: Lista Subnets
+          oracle.oci.oci_network_subnet_facts:
+            compartment_id: "{{ compartment_ocid }}"
+            display_name: "{{ subnet2_name }}"
+          register: resultado
+
+        - set_fact:
+           ad2_subnet_id: "{{ resultado.subnets[0].id }}"
+
+        - name: Lista Subnets
+          oracle.oci.oci_network_subnet_facts:
+            compartment_id: "{{ compartment_ocid }}"
+            display_name: "{{ subnet3_name }}"
+          register: resultado
+
+        - set_fact:
+           ad3_subnet_id: "{{ resultado.subnets[0].id }}"
+
+
         - name: Create a node pool
           oracle.oci.oci_container_engine_node_pool:
             cluster_id: "{{ cluster_id }}"
